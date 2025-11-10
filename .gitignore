@@ -1,0 +1,56 @@
+# 操作系统与工具产生的临时文件
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Node.js 依赖与构建产物
+node_modules/
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vite/
+/frontend/.cache/
+/frontend/.eslintcache
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/pnpm-debug.log*
+/frontend/coverage/
+
+# 构建输出与缓存目录
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+
+# 环境与配置密钥
+.env
+.env.*
+
+# 日志与运行时文件
+*.log
+backend.log
+
+# 下载的 Node 压缩包
+node-v*/
+*.tar.xz
+
+# IDE 与编辑器产生的文件
+.idea/
+.vscode/
+*.iml
+
+
