@@ -70,7 +70,25 @@
     },
     "learning_history": {
       "user_id": "user_123",
-      "feedbacks": []
+      "feedbacks": [
+        {
+          "feedback_id": "b51605fd-0fba-4cd9-90ef-91a1ccd1d0d5",
+          "document_id": "64c4dce4-af0f-4cca-8d92-259618991aac",
+          "timestamp": "2025-11-11T20:25:06.129445",
+          "original_category": "发票",
+          "original_user_category": "交通出行",
+          "original_tags": [
+            "差旅商务出行",
+            "长途旅行交通"
+          ],
+          "new_category": "发票",
+          "new_user_category": "交通出行",
+          "new_tags": [
+            "差旅商务出行"
+          ],
+          "modification_source": "用户手动"
+        }
+      ]
     },
     "document_ids": [
       "64c4dce4-af0f-4cca-8d92-259618991aac",
@@ -78,10 +96,8 @@
       "2a0252d2-91e3-4a0c-90a0-702be5c2ed5d"
     ],
     "settings": {
-      "classification_rules": [
-        "当票据显示用餐人数≥2人、菜品数量≥3种且包含非主食类菜品（如热菜、海鲜等）、消费金额超过简餐阈值（如100元）时，优先归类为'社交聚餐支出'而非'日常用餐消费'。"
-      ],
-      "rules_updated_at": "2025-11-11T20:28:02.795430",
+      "classification_rules": [],
+      "rules_updated_at": "2025-11-11T20:13:46.808418",
       "last_profile_optimization": "2025-11-11T19:44:26.458748"
     },
     "created_at": "2025-11-09T14:33:53.343211"
