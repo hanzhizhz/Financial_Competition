@@ -1,0 +1,35 @@
+{
+  "document_id": "85dc944d-c995-4298-b173-293dd00b51a1",
+  "user_id": "user_123",
+  "upload_time": "2025-11-11T22:34:14.061999",
+  "document_type": "收据",
+  "source_image": "/data/disk2/zhz/票据管理比赛/data/uploads/user_123/20251111_223314_微信图片_20251109212706_315_519.jpg",
+  "ocr_text": "缴费单位：褚家寨小区\n\n费用结算收据\n\n编号：0000060441\n\n表号：0\n\n姓名：6-01-401\n\n编号：00000209\n\n住房面积：200.000\n\n用户地址：6-01-401\n\n单价：0.69\n\n应交金额：207.00\n\n备注：\n\n实收（小写）：￥207.00元\n\n打印日期：2025-07-09\n\n操作员：002\n\n合计应交（大写）贰佰零柒元整\n\n房客电费：300\n\n购量：0\n\n损耗量：0\n\n超用量：0",
+  "issued_date": "2025/07/09",
+  "status": "已验证",
+  "amount": 207.0,
+  "user_category": "居住相关",
+  "tags": [
+    "生活能源费用"
+  ],
+  "document_type_reasoning": "这是一张水电费收据，由褚家寨小区出具给6-01-401住户。票据标题明确为'费用结算收据'，包含收付款方信息、金额、住房面积等水电费相关信息，但没有发票代码、税号等发票特有信息，也不是交通凭证或消费小票。从用户角度看，这是住户支付的水电费支出，属于居住日常必要支出，因此归类为居住相关。",
+  "tag_classification_reasoning": "这是一张住房费用结算收据，包含基本住房费用和电费。票据显示褚家寨小区6-01-401住房的固定支出207元，并明确包含房客电费300元，因此应归类为'住房固定支出'和'生活能源费用'。",
+  "structured_data": {
+    "title": "费用结算收据",
+    "receipt_number": "0000060441",
+    "issue_date": "2025/07/09",
+    "payer_name": "6-01-401",
+    "payee_name": "褚家寨小区",
+    "amount_in_words": "贰佰零柒元整",
+    "amount_in_digits": "207.00",
+    "currency": "人民币",
+    "reason": "物业费",
+    "payment_method": "",
+    "transfer_info": "",
+    "witness_name": "",
+    "is_official": "是",
+    "notes": "",
+    "total_amount": "￥207.00",
+    "total_amount_including_tax": "￥207.00"
+  }
+}
