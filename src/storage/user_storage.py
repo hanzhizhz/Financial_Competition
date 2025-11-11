@@ -79,8 +79,78 @@ class UserStorage:
         """
         all_users = self._load_all_users()
         user_data = to_dict(user)
+        
+        existing_data = all_users.get(user.user_id)
+        if existing_data is not None:
+            merged_document_ids = self._merge_document_ids(
+                user_id=user.user_id,
+                new_document_ids=user_data.get("document_ids", []),
+                existing_document_ids=existing_data.get("document_ids", []),
+            )
+            user_data["document_ids"] = merged_document_ids
+        else:
+            # 确保新增用户也按照目录里的实际票据顺序保存
+            user_data["document_ids"] = self._merge_document_ids(
+                user_id=user.user_id,
+                new_document_ids=user_data.get("document_ids", []),
+                existing_document_ids=[],
+            )
+        
         all_users[user.user_id] = user_data
         self._save_all_users(all_users)
+
+    def _merge_document_ids(
+        self,
+        user_id: str,
+        new_document_ids: List[str],
+        existing_document_ids: List[str],
+    ) -> List[str]:
+        """合并票据ID，避免并发写入导致的丢失，同时保持手动删除结果。
+        
+        合并顺序遵循：
+        1. 按照票据文件的修改时间顺序（代表真实上传顺序）
+        2. 补充当前内存中的票据ID（可能尚未写入目录）
+        3. 补充已有用户数据中仍存在的票据ID
+        """
+        merged_ids: List[str] = []
+        seen: set[str] = set()
+        
+        def add_doc_id(doc_id: str) -> None:
+            if doc_id and doc_id not in seen:
+                merged_ids.append(doc_id)
+                seen.add(doc_id)
+        
+        # 票据目录中的文件代表系统真实存在的票据
+        user_docs_dir = self.get_user_documents_dir(user_id)
+        doc_files = []
+        try:
+            for path in user_docs_dir.glob("*.json"):
+                try:
+                    mtime = path.stat().st_mtime
+                except OSError:
+                    mtime = 0.0
+                doc_files.append((mtime, path.stem))
+        except FileNotFoundError:
+            doc_files = []
+        
+        doc_files.sort(key=lambda item: item[0])
+        dir_doc_ids = [doc_id for _, doc_id in doc_files]
+        
+        for doc_id in dir_doc_ids:
+            add_doc_id(doc_id)
+        
+        # 当前内存中的票据ID
+        for doc_id in new_document_ids:
+            add_doc_id(doc_id)
+        
+        # 历史用户数据中的票据ID，仅保留仍存在于目录或当前列表的部分
+        current_set = set(new_document_ids)
+        dir_set = set(dir_doc_ids)
+        for doc_id in existing_document_ids:
+            if doc_id in current_set or doc_id in dir_set:
+                add_doc_id(doc_id)
+        
+        return merged_ids
     
     def load_user(self, user_id: str) -> Optional[User]:
         """从JSON加载用户

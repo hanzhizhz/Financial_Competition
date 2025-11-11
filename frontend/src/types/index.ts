@@ -39,3 +39,12 @@ export type UploadResponse = {
     reasoning?: string;
   };
 };
+
+export type ProfileOptimizationResponse = {
+  success: boolean;
+  triggered?: boolean;
+  updated_profile?: string[];
+  operations_count?: number;
+  message?: string;
+  error?: string;
+};

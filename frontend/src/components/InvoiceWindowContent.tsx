@@ -22,6 +22,14 @@ type InvoiceWindowContentProps = {
   onConfirmComplete?: (windowId: string) => void;
   /** 标题更新回调 */
   onTitleUpdate?: (windowId: string, title: string) => void;
+  /** 分类修改回调 */
+  onModificationsChange?: (windowId: string, modifications: ClassificationModifications | null) => void;
+  /** 受控模式：识别结果（可选，用于受控模式） */
+  controlledResult?: UploadResponse | null;
+  /** 受控模式：会话ID（可选，用于受控模式） */
+  controlledSessionId?: string | null;
+  /** 受控模式：分类修改（可选，用于受控模式） */
+  controlledModifications?: ClassificationModifications | null;
 };
 
 const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
@@ -34,14 +42,22 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
   onConfirmComplete,
   onTitleUpdate,
   onModificationsChange,
+  controlledResult,
+  controlledSessionId,
+  controlledModifications,
 }) => {
   const { message, modal } = App.useApp();
   const [loading, setLoading] = useState(false);
   const [confirming, setConfirming] = useState(false);
-  const [result, setResult] = useState<UploadResponse | null>(null);
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [internalResult, setInternalResult] = useState<UploadResponse | null>(null);
+  const [internalSessionId, setInternalSessionId] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [modifications, setModifications] = useState<ClassificationModifications | null>(null);
+  const [internalModifications, setInternalModifications] = useState<ClassificationModifications | null>(null);
+  
+  // 使用受控模式（如果提供了受控 props）或非受控模式
+  const result = controlledResult !== undefined ? controlledResult : internalResult;
+  const sessionId = controlledSessionId !== undefined ? controlledSessionId : internalSessionId;
+  const modifications = controlledModifications !== undefined ? controlledModifications : internalModifications;
 
   const handleSubmit = async ({ image, text, remarks }: UploadFormValues) => {
     try {
@@ -99,13 +115,21 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
         throw new Error("服务器返回空响应");
       }
       
-      setResult(data);
       const currentSessionId = data.sessionId || null;
-      setSessionId(currentSessionId);
-      setModifications(null);
       
+      // 更新内部状态（如果是非受控模式）
+      setInternalResult(data);
+      setInternalSessionId(currentSessionId);
+      setInternalModifications(null);
+      
+      // 通知父组件（无论是否受控模式）
       if (onUploadComplete) {
         onUploadComplete(windowId, data, currentSessionId);
+      }
+      
+      // 通知分类修改被重置
+      if (onModificationsChange) {
+        onModificationsChange(windowId, null);
       }
       
       if (data.success) {
@@ -138,12 +162,18 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
       }
       
       message.error(errorMessage);
-      setResult({
+      
+      const errorResult = {
         success: false,
         error: errorMessage
-      });
+      };
+      
+      // 更新内部状态（如果是非受控模式）
+      setInternalResult(errorResult);
+      
       setLoading(false);
       setUploadProgress(0);
+      
       if (onUploadError) {
         onUploadError(windowId, errorMessage);
       }
@@ -165,24 +195,30 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
       console.log(`[窗口 ${windowId}] 提交确认，修改内容:`, modificationsToSend);
       const response = await confirmDocument(sessionId, modificationsToSend);
       if (response.success) {
-        modal.success({
-          title: "票据已确认",
-          content: "系统会根据该票据更新统计数据和规则。"
+        message.success({
+          content: "票据已确认，系统会根据该票据更新统计数据和规则。",
+          duration: 3
         });
-        setSessionId(null);
-        setModifications(null);
+        
+        // 更新内部状态（如果是非受控模式）
+        setInternalSessionId(null);
+        setInternalModifications(null);
+        
+        // 通知父组件
         if (onConfirmComplete) {
           onConfirmComplete(windowId);
+        }
+        
+        // 通知分类修改被重置
+        if (onModificationsChange) {
+          onModificationsChange(windowId, null);
         }
       } else {
         throw new Error(response.error || "确认失败");
       }
     } catch (error) {
       console.error(`[窗口 ${windowId}] 确认失败:`, error);
-      modal.error({
-        title: "确认失败",
-        content: (error as Error).message || "请稍后再试"
-      });
+      message.error((error as Error).message || "确认失败，请稍后再试");
     } finally {
       setConfirming(false);
     }
@@ -216,7 +252,10 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
         loading={loading} 
         result={result}
         onModificationsChange={(modifications) => {
-          setModifications(modifications);
+          // 更新内部状态（如果是非受控模式）
+          setInternalModifications(modifications);
+          
+          // 通知父组件（无论是否受控模式）
           if (onModificationsChange) {
             onModificationsChange(windowId, modifications);
           }
@@ -235,9 +274,15 @@ const InvoiceWindowContent: React.FC<InvoiceWindowContentProps> = ({
         <Button
           disabled={!result}
           onClick={() => {
-            setResult(null);
-            setSessionId(null);
-            setModifications(null);
+            // 更新内部状态（如果是非受控模式）
+            setInternalResult(null);
+            setInternalSessionId(null);
+            setInternalModifications(null);
+            
+            // 通知父组件（无论是否受控模式）
+            if (onModificationsChange) {
+              onModificationsChange(windowId, null);
+            }
           }}
         >
           清空结果

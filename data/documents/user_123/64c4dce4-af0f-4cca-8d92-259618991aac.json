@@ -1,0 +1,40 @@
+{
+  "document_id": "64c4dce4-af0f-4cca-8d92-259618991aac",
+  "user_id": "user_123",
+  "upload_time": "2025-11-11T20:24:54.434800",
+  "document_type": "发票",
+  "source_image": "/data/disk2/zhz/票据管理比赛/data/uploads/user_123/20251111_202325_image.png",
+  "ocr_text": "电子发票（铁路电子客票）\n\n发票号码：25619139032000695732  \n开票日期：2025年04月13日\n\n西安北站 Xi'anbei G1887 绵阳站 Mianyang\n\n2025年04月09日 14:01开 06车12B号 二等座 票价：￥218.00\n\n6104811999****0033 董方晨\n\n电子客票号：3903263086040992797162025\n\n购买方名称：中国工程物理研究院培训中心 统一社会信用代码：12100000400008837W\n\n买票请到12306 发货请到95306 中国铁路祝您旅途愉快",
+  "issued_date": "2025/04/13",
+  "status": "已验证",
+  "amount": 218.0,
+  "user_category": "交通出行",
+  "tags": [
+    "差旅商务出行"
+  ],
+  "document_type_reasoning": "根据票据内容分析，这是一张铁路电子客票的发票。票据标题明确标注为'电子发票（铁路电子客票）'，包含发票号码、开票日期等发票要素，同时包含车次信息（G1887）、出发到达站（西安北站到绵阳站）、乘车日期、座位信息（06车12B号，二等座）和票价（￥218.00）等铁路行程信息。从专业分类看，它属于发票类别；从用户视角看，这是一张火车票，属于交通出行类别。",
+  "tag_classification_reasoning": "根据用户画像，用户是研二学生，偶尔因项目需要出差或驻场。票据内容显示这是一张从西安到绵阳的铁路电子客票，购买方为'中国工程物理研究院培训中心'，表明这可能与研究项目相关。考虑到用户视角类型为'交通出行'，且票据显示的是长途出行（西安到绵阳），最合适的子标签是'差旅商务出行'和'长途旅行交通'。没有证据表明这是日常通勤或车辆维护费用，因此不选择这两个标签。",
+  "structured_data": {
+    "invoice_code": "",
+    "invoice_number": "25619139032000695732",
+    "issue_date": "2025/04/13",
+    "buyer_name": "中国工程物理研究院培训中心",
+    "buyer_tax_id": "12100000400008837W",
+    "buyer_address_phone": "",
+    "buyer_bank_account": "",
+    "seller_name": "中国铁路",
+    "seller_tax_id": "",
+    "seller_address_phone": "",
+    "seller_bank_account": "",
+    "total_amount_excluding_tax": "218.00",
+    "total_tax_amount": "",
+    "total_amount_including_tax": "218.00",
+    "currency": "CNY",
+    "invoice_type": "电子发票（铁路电子客票）",
+    "invoice_status": "",
+    "check_code": "3903263086040992797162025",
+    "items": "西安北站 Xi'anbei G1887 绵阳站 Mianyang 2025/04/09 14:01:00 06车12B号 二等座",
+    "payment_method": "",
+    "remark": "买票请到12306 发货请到95306 中国铁路祝您旅途愉快"
+  }
+}

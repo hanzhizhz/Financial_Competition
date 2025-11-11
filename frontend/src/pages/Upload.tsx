@@ -185,6 +185,9 @@ const UploadPage = () => {
                   onConfirmComplete={handleConfirmComplete}
                   onTitleUpdate={handleTitleUpdate}
                   onModificationsChange={handleModificationsChange}
+                  controlledResult={window.result}
+                  controlledSessionId={window.sessionId}
+                  controlledModifications={window.modifications}
                 />
               </div>
             ))}

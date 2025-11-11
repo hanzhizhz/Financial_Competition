@@ -12,7 +12,8 @@ import {
   confirmDocumentById,
   batchConfirmDocuments,
   batchDeleteDocuments,
-  getCategoryTags
+  getCategoryTags,
+  getUserProfile
 } from "../api/agent";
 import type { ClassificationSummary, DocumentRecord } from "../types";
 
@@ -453,11 +454,64 @@ const DashboardPage = () => {
   const handleOptimizeProfile = async () => {
     try {
       message.loading({ content: "正在触发画像优化...", key: "optimize" });
+      
+      // 获取优化前的画像（用于对比）
+      const profileDataBefore = await getUserProfile();
+      const profileBefore = profileDataBefore?.profile_items || [];
+      
+      // 执行优化
       const result = await manualProfileOptimize();
-      if (result.success) {
+      
+      if (result.success && result.triggered) {
         message.success({ content: "画像优化完成", key: "optimize" });
+        
+        // 刷新数据
+        await loadSummary();
+        
+        // 显示详细结果
+        modal.info({
+          title: "用户画像优化结果",
+          width: 700,
+          content: (
+            <div>
+              <p><strong>执行操作：</strong>{result.operations_count || 0} 项</p>
+              {result.message && (
+                <p><strong>说明：</strong>{result.message}</p>
+              )}
+              
+              <div style={{ marginTop: 16 }}>
+                <strong>优化前的画像：</strong>
+                <ul style={{ marginTop: 8, maxHeight: 200, overflow: "auto", backgroundColor: "#f5f5f5", padding: "12px 12px 12px 32px", borderRadius: 4 }}>
+                  {profileBefore.length > 0 ? (
+                    profileBefore.map((item, index) => (
+                      <li key={index} style={{ marginBottom: 4 }}>{item}</li>
+                    ))
+                  ) : (
+                    <li style={{ color: "#999", listStyle: "none" }}>暂无画像数据</li>
+                  )}
+                </ul>
+              </div>
+              
+              <div style={{ marginTop: 16 }}>
+                <strong>优化后的画像：</strong>
+                <ul style={{ marginTop: 8, maxHeight: 200, overflow: "auto", backgroundColor: "#e6f7ff", padding: "12px 12px 12px 32px", borderRadius: 4 }}>
+                  {result.updated_profile && result.updated_profile.length > 0 ? (
+                    result.updated_profile.map((item, index) => (
+                      <li key={index} style={{ marginBottom: 4 }}>{item}</li>
+                    ))
+                  ) : (
+                    <li style={{ color: "#999", listStyle: "none" }}>暂无画像数据</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          )
+        });
       } else {
-        message.error({ content: result.error || "画像优化失败", key: "optimize" });
+        message.error({ 
+          content: result.error || result.message || "画像优化失败", 
+          key: "optimize" 
+        });
       }
     } catch (error) {
       console.error(error);
